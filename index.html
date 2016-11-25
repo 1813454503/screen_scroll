@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        .container{
+            width:100%;
+        }
+        .slider1{
+            width:100%;
+            height:700px;
+            background:red;
+            font-size:30px;
+            text-align:center;
+            line-height:700px;
+            color:#fff;
+        }
+        .slider2{
+            width:100%;
+            height:700px;
+            background:blue;
+            text-align:center;
+            font-size:30px;
+            line-height:700px;
+            color:#fff;
+        }
+        .slider3{
+            width:100%;
+            height:700px;
+            background:yellow;
+            font-size:30px;
+            text-align:center;
+            line-height:700px;
+            color:#fff;
+        }
+        .slider4{
+            width:100%;
+            height:700px;
+            background:black;
+            font-size:30px;
+            text-align:center;
+            line-height:700px;
+            color:#fff;
+        }
+        .slider5{
+            width:100%;
+            height:700px;
+            background:pink;
+            font-size:30px;
+            text-align:center;
+            line-height:700px;
+            color:#fff;
+        }
+    </style>
+</head>
+<body>
+<ul class="container" id="ul">
+    <li class="slider1">111</li>
+    <li class="slider2">222</li>
+    <li class="slider3">333</li>
+    <li class="slider4">444</li>
+    <li class="slider5">555</li>
+</ul>
+<script>
+    window.onload=function(){
+        function addWheel(obj,fn){
+            if (navigator.userAgent.indexOf('Firefox') != -1) {           //ff
+                obj.addEventListener('DOMMouseScroll', fnwheel, false);
+            } else {
+                obj.onmousewheel=fnwheel;
+            }
+            function fnwheel(ev){
+                var oEv=ev||event;
+                var down=false;
+                if(oEv.wheelDelta){
+                    down= oEv.wheelDelta<0?true:false;
+                }else{
+                    down= oEv.detail>0?true:false;
+                }
+                fn(down);
+                oEv.preventDefault||oEv.preventDefault();
+                return false;
+            }
+        }
+        function go(obj) {
+            clearInterval(timer);
+            var iSpeed = 0;
+            timer = setInterval(function () {
+                bOk=false;
+                var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                iSpeed = (obj.offsetTop - scrollTop) / 13;
+
+                iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
+
+                if (scrollTop == obj.offsetTop) {
+                    clearInterval(timer);
+                    iSpeed=0;
+                    bOk=true;
+                } else {
+                    document.documentElement.scrollTop = document.body.scrollTop = scrollTop + iSpeed;
+                }
+            }, 30);
+        }
+        var oUl=document.getElementById('ul');
+        var bOk=true;
+        var timer=null;
+        var t=0;
+        var aLi=oUl.getElementsByTagName('li');
+//            document.documentElement.scrollTop = document.body.scrollTop =0;
+        addWheel(oUl,function(down){
+            if(down&&bOk){
+                t+=1;
+                bOk=false;
+                alert(t);
+                if(t>=0&&t<=aLi.length-1){
+                    go(aLi[t]);
+                }else{
+                    t=aLi.length-1;
+                    bOk=true;
+                }
+            }else if(!down&&bOk){
+                t-=1;
+                bOk=false;
+                if(t>=0&&t<=aLi.length){
+                    go(aLi[t]);
+                }else{
+                    t=0;
+                    bOk=true;
+                }
+                alert(t);
+            }
+        });
+    };
+</script>
+</body>
+</html>
